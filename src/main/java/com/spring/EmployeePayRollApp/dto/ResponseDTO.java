@@ -1,6 +1,9 @@
 package com.spring.EmployeePayRollApp.dto;
 
-public class ResponseDTO {
+
+import lombok.Data;
+
+public @Data class ResponseDTO {
 
     private String message;
     private Object data;
