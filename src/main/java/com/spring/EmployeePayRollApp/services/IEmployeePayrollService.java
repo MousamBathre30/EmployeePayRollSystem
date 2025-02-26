@@ -5,7 +5,7 @@ import com.spring.EmployeePayRollApp.model.EmployeePayrollData;
 
 import java.util.List;
 
-public interface IEmployeePayrollServise {
+public interface IEmployeePayrollService {
     List<EmployeePayrollData> getEmployeePayrollData();
 
     EmployeePayrollData getEmployeePayrollDataById(int empid);
@@ -14,6 +14,6 @@ public interface IEmployeePayrollServise {
 
     EmployeePayrollData updateEmployeePayrollData(int id , EmployeePayrollDTO employeePayrollDTO);
 
-    EmployeePayrollData updateEmployeePayrollData(EmployeePayrollDTO employeePayrollDTO);
+   // EmployeePayrollData updateEmployeePayrollData(EmployeePayrollDTO employeePayrollDTO);
     void deleteEmployeePayrollData(int empId);
 }
