@@ -1,43 +1,28 @@
 package com.spring.EmployeePayRollApp.model;
 
 import com.spring.EmployeePayRollApp.dto.EmployeePayrollDTO;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Entity  // Marks this class as a JPA Entity (Table in MySQL)
+@Table(name = "employees_payroll") // Optional: Specifies table name
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class EmployeePayrollData {
 
-    private int employeeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments ID
+    private int id;
+
     private String name;
     private long salary;
 
-    public EmployeePayrollData(){
-
-    }
-
-    public EmployeePayrollData(int empId , EmployeePayrollDTO empPayrollDTO){
-        this.employeeId = empId;
-        this.name = empPayrollDTO.name;
-        this.salary = empPayrollDTO.salary;
-    }
-
-    public int getEmployeeId(){
-        return employeeId;
-    }
-    public void setEmployeeId(int employeeId){
-        this.employeeId = employeeId;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public long getSalary(){
-        return salary;
-    }
-
-    public void setSalary(long salary){
-        this.salary = salary;
+    // ✅ Constructor to create entity from DTO
+    public EmployeePayrollData(EmployeePayrollDTO empPayrollDTO) {
+        this.name = empPayrollDTO.getName();
+        this.salary = empPayrollDTO.getSalary();
     }
 }
