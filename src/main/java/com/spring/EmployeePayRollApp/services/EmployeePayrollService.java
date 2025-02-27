@@ -1,47 +1,55 @@
 package com.spring.EmployeePayRollApp.services;
 
+import com.spring.EmployeePayRollApp.Repo.EmployeeRepository;
 import com.spring.EmployeePayRollApp.dto.EmployeePayrollDTO;
 import com.spring.EmployeePayRollApp.exceptions.EmployeePayrollException;
-import com.spring.EmployeePayRollApp.exceptions.EmployeePayrollExceptionHandler;
 import com.spring.EmployeePayRollApp.model.EmployeePayrollData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class EmployeePayrollService implements IEmployeePayrollServise {
+public class EmployeePayrollService implements IEmployeePayrollService {
 
-  private List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-  public List<EmployeePayrollData> getEmployeePayrollData(){
-      return employeePayrollList;
-  }
+    // Get all employees from the database
+    @Override
+    public List<EmployeePayrollData> getEmployeePayrollData() {
+        return employeeRepository.findAll();
+    }
 
-  public EmployeePayrollData getEmployeePayrollDataById(int empId){
-      return employeePayrollList.stream().filter(empData -> empData.getEmployeeId() == empId).findFirst().orElseThrow(() -> new EmployeePayrollException("Employee Not Found"));
-  }
-  public EmployeePayrollData createEmployeePayrollData(EmployeePayrollDTO empPayrollDTO){
-      EmployeePayrollData empData = null;
-      empData = new EmployeePayrollData(employeePayrollList.size()+1, empPayrollDTO);
-      employeePayrollList.add(empData);
-      return empData;
-  }
+    // Get employee by ID using JPA
+    @Override
+    public EmployeePayrollData getEmployeePayrollDataById(int empId) {
+        return employeeRepository.findById((long) empId)
+                .orElseThrow(() -> new EmployeePayrollException("Employee Not Found with ID: " + empId));
+    }
 
-  public EmployeePayrollData updateEmployeePayrollData(int empID , EmployeePayrollDTO empPayrollDTO){
-      EmployeePayrollData empData = this.getEmployeePayrollDataById(empID);
-      empData.setName(empPayrollDTO.name);
-      empData.setSalary(empPayrollDTO.salary);
-      employeePayrollList.set(empID-1,empData);
-      return empData;
-  }
-  public EmployeePayrollData updateEmployeePayrollData(EmployeePayrollDTO empPayrollDTO){
-      EmployeePayrollData empData  = null;
-      return empData;
-  }
+    //  Create new employee and save to MySQL
+    @Override
+    public EmployeePayrollData createEmployeePayrollData(EmployeePayrollDTO empPayrollDTO) {
+        EmployeePayrollData empData = new EmployeePayrollData(empPayrollDTO);
+        return employeeRepository.save(empData); // Saves to DB
+    }
 
-  public void deleteEmployeePayrollData(int empId){
-      employeePayrollList.remove(empId-1);
-  }
+    //  Update employee data in MySQL --db 
+    @Override
+    public EmployeePayrollData updateEmployeePayrollData(int empId, EmployeePayrollDTO empPayrollDTO) {
+        EmployeePayrollData existingEmployee = getEmployeePayrollDataById(empId);
+        existingEmployee.setName(empPayrollDTO.getName());
+        existingEmployee.setSalary(empPayrollDTO.getSalary());
+        return employeeRepository.save(existingEmployee); // Saves updated record to DB
+    }
 
+    //  Delete employee from MySQL -- db 
+    @Override
+    public void deleteEmployeePayrollData(int empId) {
+        if (!employeeRepository.existsById((long) empId)) {
+            throw new EmployeePayrollException("Cannot delete, Employee ID not found: " + empId);
+        }
+        employeeRepository.deleteById((long) empId);
+    }
 }
