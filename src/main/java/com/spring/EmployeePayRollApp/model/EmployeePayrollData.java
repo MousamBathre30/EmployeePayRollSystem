@@ -4,25 +4,37 @@ import com.spring.EmployeePayRollApp.dto.EmployeePayrollDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity  // Marks this class as a JPA Entity (Table in MySQL)
-@Table(name = "employees_payroll") // Optional: Specifies table name
-@Getter
-@Setter
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Entity
+@Table(name = "newTable4")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class EmployeePayrollData {
+public @Data class EmployeePayrollData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
     private long salary;
+    private String gender;
+    private LocalDate startDate;
+    private String note;
+    private String profilepic;
 
-    // ✅ Constructor to create entity from DTO
-    public EmployeePayrollData(EmployeePayrollDTO empPayrollDTO) {
-        this.name = empPayrollDTO.getName();
-        this.salary = empPayrollDTO.getSalary();
+   // ✅ Converts List<String> to String
+    private List<String> departments;
+
+    public EmployeePayrollData(EmployeePayrollDTO employeePayrollDTO) {
+        this.name = employeePayrollDTO.getName();
+        this.salary = employeePayrollDTO.getSalary();
+        this.gender = employeePayrollDTO.getGender();
+        this.note = employeePayrollDTO.getNote();
+        this.startDate = LocalDate.parse(employeePayrollDTO.getStartDate());
+        this.profilepic = employeePayrollDTO.getProfilepic();
+        this.departments = employeePayrollDTO.getDepartments();
     }
 }
