@@ -4,8 +4,9 @@ package com.spring.EmployeePayRollApp.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 
-public class EmployeePayrollDTO {
+public @Data class EmployeePayrollDTO {
     @NotEmpty(message = "Employee name cannot be null")
     @Pattern(regexp = "^[A-Z][a-zA-Z\\s]{2,}$", message = "Employee name Invalid")
     public String name;
